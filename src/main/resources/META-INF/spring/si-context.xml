@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:esper="http://www.opencredo.com/schema/esper"
+       xmlns:si-esper="http://www.opencredo.com/schema/esper/integration"
+       xmlns:si="http://www.springframework.org/schema/integration"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.opencredo.com/schema/esper
+						http://www.opencredo.com/schema/esper/opencredo-esper-3.0.xsd
+						http://www.opencredo.com/schema/esper/integration
+						http://www.opencredo.com/schema/esper/integration/opencredo-integration-esper-3.0.xsd
+						http://www.springframework.org/schema/integration
+						http://www.springframework.org/schema/integration/spring-integration-2.0.xsd">
+
+    <description>
+    </description>
+    <si:gateway service-interface="com.opencredo.sandbox.aleksav.esper.generator.EventGateway"
+                id="eventGateway" default-request-channel="marketData"/>
+
+    <si:channel id="marketData">
+        <si:dispatcher task-executor="taskExecutor"/>
+    </si:channel>
+
+    <si-esper:wire-tap-channels default-wire-tap="wiretap">
+        <si-esper:channel pattern="marketData"/>
+    </si-esper:wire-tap-channels>
+
+
+
+    <si-esper:wire-tap id="wiretap" sourceId="defaultWireTap" template-ref="template" post-send="true" pre-receive="false" pre-send="false" post-receive="false"/>
+
+    <esper:template id="template" configuration="esper-configuration.xml">
+        <esper:statements>
+            <esper:statement
+                    epl="select symbol,avg(ask),avg(bid),avg(price) from com.opencredo.sandbox.aleksav.esper.domain.MarketDataEvent.win:time(30 second) group by symbol">
+                <esper:listeners>
+                    <!-- Pass Esper messages to the inPlaceCollectionGateway -->
+                    <esper:ref bean="inPlaceCollectionGateway"/>
+                </esper:listeners>
+            </esper:statement>
+        </esper:statements>
+    </esper:template>
+
+    <si-esper:inbound-channel-adapter id="inPlaceCollectionGateway" channel="inboundRawEsperInPlaceCollectionMessages"/>
+    <si:channel id="inboundRawEsperInPlaceCollectionMessages"/>
+    <si:service-activator ref="inPlaceEventCollector"
+                          input-channel="inboundRawEsperInPlaceCollectionMessages" method="collect"/>
+
+    <si:service-activator ref="dataProcessor"
+                          input-channel="marketData" method="process"/>
+
+
+</beans>

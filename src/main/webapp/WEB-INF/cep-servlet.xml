@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.opencredo.sandbox.aleksav.esper.controller"/>
+    <mvc:annotation-driven/>
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver"/>
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+          p:basename="messages"/>
+
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/freemarker/"/>
+    </bean>
+
+    <!--
+
+      View resolvers can also be configured with ResourceBundles or XML files. If you need
+      different view resolving based on Locale, you have to use the resource bundle resolver.
+
+    -->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver" p:order="1">
+        <property name="mediaTypes">
+            <map>
+                <entry key="json"
+                       value="#{T(org.springframework.web.servlet.view.json.MappingJacksonJsonView).DEFAULT_CONTENT_TYPE}"/>
+            </map>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver" p:order="2">
+        <property name="cache" value="true"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+
+        <!-- if you want to use the Spring FreeMarker macros, set this property to true -->
+        <property name="exposeSpringMacroHelpers" value="true"/>
+
+    </bean>
+</beans>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+
+
+    <bean id="marketDataGenerator" class="com.opencredo.sandbox.aleksav.esper.generator.RandomMarketDataGenerator">
+        <constructor-arg index="0" ref="eventGateway"/>
+    </bean>
+
+    <bean id="inPlaceEventCollector" class="com.opencredo.sandbox.aleksav.esper.listener.collector.InPlaceEventCollector">
+        <constructor-arg index="0" value="symbol"/>
+    </bean>
+
+    <bean class="com.opencredo.sandbox.aleksav.esper.processor.DummyDataProcessor" id="dataProcessor"/>
+
+
+</beans>
