@@ -59,7 +59,7 @@
             When it complete (or errors)*/
                 $.ajax({
                     type: "GET",
-                    url: "/cep/inplace.json",
+                    url: "inplace.json",
                     dataType:'json',
                     async: true, /* If set to non-async, browser shows page as "Loading.."*/
                     cache: false,
