@@ -22,7 +22,7 @@ public class RandomMarketDataGenerator implements MarketDataGenerator {
     }
 
     enum Symbol {
-        ACME(1, "ACME", 100, 1), FGTS(2, "FGTS", 13, 5), JUYY(3, "JUYY", 5, 10), LOII(4, "LOII", 657, 7);
+        ACME(1, "ACME", 100, 1), FGTS(2, "FGTS", 13, 5), JUYY(3, "JUYY", 5, 10), NYSR(4, "NYSR", 657, 7);
 
         private int id;
         private String name;
@@ -50,7 +50,7 @@ public class RandomMarketDataGenerator implements MarketDataGenerator {
                 case 3:
                     return JUYY;
                 case 4:
-                    return LOII;
+                    return NYSR;
             }
             throw new IllegalArgumentException("Unknown symbol");
         }

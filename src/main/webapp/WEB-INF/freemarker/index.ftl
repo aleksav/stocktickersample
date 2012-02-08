@@ -20,11 +20,15 @@
             td.lower {
                 color: red;
             }
+            table.ticker_data{
+
+            }
+
         </style>
 
         <script type="text/javascript" charset="utf-8">
             function renderMarketData(type, data) {
-                var html = "<table border='1'>"
+                var html = "<table class='market_daya' border='1'>"
                 $.each(data, function(key, val) {
                     html = html + "<tr>" + "<td class='head'>" + key + "</td>"
                     html = html + renderCell(key, "avg(price)", val.price);
@@ -86,6 +90,13 @@
         </script>
     </head>
     <body>
+        <h1> Esper Stock Ticker Sample</h1>
+        <p class="info">The sample app is randomly generating event stream at the rate of 10000 events per second. </p>
+        <p class="info">Table below displays average stock price, bid and amounts over last 30 seconds, as processed by the Esper statement below.</p>
+        <p class="info">Esper statement: <i>select symbol,avg(ask),avg(bid),avg(price) from com.opencredo.sandbox.aleksav.esper.domain.MarketDataEvent.win:time(30 second) group by symbol</i></p>
+        <p class="info">Download the sample code from <a href="http://www.github.com/opencredo/esper-stockticker-sample">OpenCredo public repository on github</a>.</p>
+        <p class="info">Visit <a href="http://www.opencredo.com/blog">OpenCredo blog</a> to read more about Esper and other technology topics.</p>
+
         <div id="market_data">
             No Data
         </div>
